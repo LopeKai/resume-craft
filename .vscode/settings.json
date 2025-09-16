@@ -1,0 +1,16 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#ffffff",
+        "activityBar.background": "#ffffff",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#df9f9f",
+        "activityBarBadge.foreground": "#15202b",
+        "sash.hoverBorder": "#ffffff"
+    },
+    "peacock.color": "#ededed",
+    "editor.wordWrap": "off",
+    "editor.autoIndentOnPaste": false,
+    "editor.autoIndentOnPasteWithinString": true,
+    "editor.fontSize": 21
+}
