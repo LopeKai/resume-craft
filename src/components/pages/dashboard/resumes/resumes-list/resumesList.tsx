@@ -10,10 +10,6 @@ export function ResumesList() {
             </NewResumeDialog>
 
             <ResumesCard />
-
-            <ResumesCard />
-
-            <ResumesCard />
         </section>
     )
 }

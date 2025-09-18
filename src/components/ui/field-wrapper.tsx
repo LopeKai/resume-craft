@@ -1,17 +1,18 @@
 import { ReactNode } from "react";
 import { Label } from "./label";
-
+import { cn } from "@/lib/utils";
 
 type FieldWrapperProps = {
     label: string;
     children: ReactNode;
+    className?: string;
 };
 
-export function FieldWrapper({ label, children }: FieldWrapperProps) {
+export function FieldWrapper({ label, children, className }: FieldWrapperProps) {
     return (
-        <div className="flex flex-col gap-2">
+        <div className={cn("flex flex-col gap-2 w-full", className)}>
             <Label>
-               {label}
+                {label}
             </Label>
 
             {children}
