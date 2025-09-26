@@ -25,11 +25,32 @@ export function ResumePage() {
                 location: "",
                 phone: "",
                 website: ""
-            }
+            },
+            summary: "",
+            certifications: [],
+            educations: [],
+            experiences: [],
+            languages: [],
+            projects: [],
+            skills: [],
+            socialMedias: [
+                {
+                    icon: '',
+                    name: 'test one',
+                    url: 'test one',
+                    username: 'test one'
+                },
+                {
+                    icon: '',
+                    name: 'test two',
+                    url: 'test two',
+                    username: 'test two'
+                },
+            ],
         }
     };
 
-    const methods = useForm<ResumeData>({defaultValues});
+    const methods = useForm<ResumeData>({ defaultValues });
 
     return (
         <FormProvider {...methods}>
