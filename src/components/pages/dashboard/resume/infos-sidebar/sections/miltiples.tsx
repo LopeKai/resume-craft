@@ -1,10 +1,14 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import { BicepsFlexed, BriefcaseBusiness, FileBadge2, Globe, GraduationCap, Languages, Share2 } from "lucide-react";
 import { MultipleDragList, MultipleDrapItemData } from "../multiple-drag-list";
+import { ManageMultipleItemDialog } from "../multiple-drag-list/manage-multiple-item-dialog";
 
 export function MultiplesSections() {
+    const [sectionToAdd, setSectionToAdd] = useState<MultipleDrapItemData | null>(null);
+
+
     const sectionsKeys: MultipleDrapItemData[] = [
         {
             formKey: "socialMedias",
@@ -68,11 +72,23 @@ export function MultiplesSections() {
 
                         <MultipleDragList
                             data={section}
-                            onAdd={() => {}}
-                            onEdit={() => {}}
+                            onAdd={() => setSectionToAdd(section)}
+                            onEdit={() => { }}
                         />
                     </Fragment>
                 ))
+            }
+
+            {
+                sectionToAdd && (
+                    <ManageMultipleItemDialog
+                        data={sectionToAdd}
+                        open={!!sectionToAdd}
+                        setOpen={(value) => {
+                            if (!value) setSectionToAdd(null);
+                        }}
+                    />
+                )
             }
         </div>
     )

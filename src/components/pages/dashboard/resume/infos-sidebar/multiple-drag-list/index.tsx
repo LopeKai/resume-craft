@@ -1,8 +1,9 @@
-import { GripVertical, LucideIcon } from "lucide-react";
+import { GripVertical, LucideIcon, Plus } from "lucide-react";
 import { SectionTitle } from "../section-title";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { DragDropContext, Draggable, DropResult, Droppable } from '@hello-pangea/dnd'
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export type ResumeArrayKeys = Exclude<keyof ResumeContentData, "image" | "infos" | "summary">
 
@@ -28,12 +29,14 @@ export function MultipleDragList({ data, onAdd, onEdit }: MultipleDragListProps)
         name: `content.${data.formKey}`,
     });
 
+    const isEmpty = fields.length === 0;
+
     const handleDrag = ({ source, destination }: DropResult) => {
         if (!destination) return;
 
         move(source.index, destination.index)
     };
-
+    
     return (
         <div>
             <SectionTitle
@@ -42,6 +45,18 @@ export function MultipleDragList({ data, onAdd, onEdit }: MultipleDragListProps)
             />
 
             <div className="mt-4 flex flex-col">
+                {
+                    isEmpty && (
+                        <Button 
+                            variant="outline"
+                            className="w-full gap-2"
+                            onClick={onAdd}
+                        >
+                            <Plus size={16}/>
+                            Adicionar item
+                        </Button>
+                    )
+                }
                 {!!fields.length && (
                     <DragDropContext
                         onDragEnd={handleDrag}

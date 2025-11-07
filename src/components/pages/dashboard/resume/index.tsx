@@ -33,20 +33,7 @@ export function ResumePage() {
             languages: [],
             projects: [],
             skills: [],
-            socialMedias: [
-                {
-                    icon: '',
-                    name: 'test one',
-                    url: 'test one',
-                    username: 'test one'
-                },
-                {
-                    icon: '',
-                    name: 'test two',
-                    url: 'test two',
-                    username: 'test two'
-                },
-            ],
+            socialMedias: [],
         }
     };
 
