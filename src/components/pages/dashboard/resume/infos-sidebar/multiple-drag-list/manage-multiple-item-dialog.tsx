@@ -1,7 +1,7 @@
 import { BaseDialogProps, Dialog } from "@/components/ui/dialog";
 import { MultipleDrapItemData, ResumeArrayKeys } from ".";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { Fragment, useMemo } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { InputField } from "@/components/ui/input/field";
@@ -10,10 +10,12 @@ import { IconField } from "@/components/ui/icon-input/field";
 import { SliderField } from "@/components/ui/slider/field";
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuid } from 'uuid';
+import { toast } from "sonner"
 
 export type ManageMultipleItemDialogProps = BaseDialogProps & {
     data: MultipleDrapItemData;
     setOpen: (open: boolean) => void;
+    initialData: any;
 };
 
 type FormConfig<T> = {
@@ -232,9 +234,11 @@ const formConfig: FormConfigObject = {
     ],
 };
 
-export function ManageMultipleItemDialog({ data, open, setOpen }: ManageMultipleItemDialogProps) {
+export function ManageMultipleItemDialog({ data, open, initialData, setOpen }: ManageMultipleItemDialogProps) {
     const methods = useForm();
     const { setValue, getValues } = useFormContext<ResumeData>();
+
+    const isEditing = !!initialData;
 
     const formContent = useMemo(() => {
         const config = formConfig[data.formKey];
@@ -282,19 +286,52 @@ export function ManageMultipleItemDialog({ data, open, setOpen }: ManageMultiple
         })
     }, [data.formKey]);
 
+    const onDelete = () => {
+        const currentValue = getValues();
+        const formKey = data.formKey;
+        const currentFieldValue = currentValue.content[formKey] ?? [];
+
+        const updatedItems = currentFieldValue.filter(
+            (item: any) => item.id !== initialData.id
+        );
+
+        setValue(`content.${formKey}`, updatedItems);
+        setOpen(false);
+        toast.success("Item removido com sucesso!");
+    }
+
     const onSubmit = (formData: any) => {
         const currentValue = getValues();
         const formKey = data.formKey;
         const currentFieldValue = currentValue.content[formKey];
 
+        if (isEditing) {
+            const updatedItems = currentFieldValue.map((item: any) => {
+                if (item.id === initialData.id) {
+                    return formData;
+                };
+                return item;
+            });
+
+            setValue(`content.${formKey}`, updatedItems);
+            setOpen(false);
+            toast.success("Item atualizado com sucesso!")
+            return;
+        }
+
         setValue(`content.${formKey}`,
             [...currentFieldValue, {
                 ...formData,
-                id: uuid,
-        }]);
+                id: uuid(),
+            }]);
 
-        setOpen(false)
+        setOpen(false);
+        toast.success("Item adicionado com sucesso.")
     };
+
+    useEffect(() => {
+        if (initialData) methods.reset(initialData);
+    }, [initialData, methods]);
 
     return (
         <Dialog
@@ -313,11 +350,21 @@ export function ManageMultipleItemDialog({ data, open, setOpen }: ManageMultiple
                     </div>
 
                     <div className="ml-auto flex gap-3">
+                        {
+                            isEditing && (
+                                <Button
+                                    variant="destructive"
+                                    onClick={onDelete}
+                                >
+                                    Remover
+                                </Button>
+                            )
+                        }
                         <Button
                             type="submit"
                             className="w-max"
                         >
-                            Adicionar
+                           {isEditing ? "Salvar" : "Adicionar"}
                         </Button>
                     </div>
                 </form>

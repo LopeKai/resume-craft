@@ -4,6 +4,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { DragDropContext, Draggable, DropResult, Droppable } from '@hello-pangea/dnd'
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooptip";
 
 export type ResumeArrayKeys = Exclude<keyof ResumeContentData, "image" | "infos" | "summary">
 
@@ -29,6 +30,7 @@ export function MultipleDragList({ data, onAdd, onEdit }: MultipleDragListProps)
         name: `content.${data.formKey}`,
     });
 
+
     const isEmpty = fields.length === 0;
 
     const handleDrag = ({ source, destination }: DropResult) => {
@@ -36,7 +38,7 @@ export function MultipleDragList({ data, onAdd, onEdit }: MultipleDragListProps)
 
         move(source.index, destination.index)
     };
-    
+
     return (
         <div>
             <SectionTitle
@@ -47,16 +49,17 @@ export function MultipleDragList({ data, onAdd, onEdit }: MultipleDragListProps)
             <div className="mt-4 flex flex-col">
                 {
                     isEmpty && (
-                        <Button 
+                        <Button
                             variant="outline"
                             className="w-full gap-2"
                             onClick={onAdd}
                         >
-                            <Plus size={16}/>
+                            <Plus size={16} />
                             Adicionar item
                         </Button>
                     )
                 }
+
                 {!!fields.length && (
                     <DragDropContext
                         onDragEnd={handleDrag}
@@ -98,15 +101,21 @@ export function MultipleDragList({ data, onAdd, onEdit }: MultipleDragListProps)
                                                                     <GripVertical size={14} />
                                                                 </div>
 
-                                                                <div className="flex-1 flex flex-col justify-center px-3 cursor-pointer hover:bg-muted/80 transition-all">
-                                                                    <p className="text-sm font-title font-bold">
-                                                                        {field[titleKey]}
-                                                                    </p>
+                                                                <Tooltip content="Clique para editar">
+                                                                    <div 
+                                                                        className="flex-1 flex flex-col justify-center px-3 cursor-pointer hover:bg-muted/80 transition-all"
+                                                                        onClick={() => onEdit(index)}
+                                                                    >
+                                                                        <p className="text-sm font-title font-bold">
+                                                                            {field[titleKey]}
+                                                                        </p>
 
-                                                                    <p className="text-sx text-muted-foreground">
-                                                                        {field[descriptionKey]}
-                                                                    </p>
-                                                                </div>
+                                                                        <p className="text-sx text-muted-foreground">
+                                                                            {field[descriptionKey]}
+                                                                        </p>
+                                                                    </div>
+                                                                </Tooltip>
+
                                                             </div>
                                                         )
                                                     }
@@ -122,6 +131,19 @@ export function MultipleDragList({ data, onAdd, onEdit }: MultipleDragListProps)
                         </Droppable>
                     </DragDropContext>
                 )}
+
+                {
+                    !isEmpty && (
+                        <Button
+                            variant="outline"
+                            className="w-max gap-2 ml-auto mt-4"
+                            onClick={onAdd}
+                        >
+                            <Plus size={16} />
+                            Adicionar item
+                        </Button>
+                    )
+                }
             </div>
         </div>
     )

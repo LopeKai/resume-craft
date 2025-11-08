@@ -4,10 +4,13 @@ import { Separator } from "@/components/ui/separator";
 import { BicepsFlexed, BriefcaseBusiness, FileBadge2, Globe, GraduationCap, Languages, Share2 } from "lucide-react";
 import { MultipleDragList, MultipleDrapItemData } from "../multiple-drag-list";
 import { ManageMultipleItemDialog } from "../multiple-drag-list/manage-multiple-item-dialog";
+import { useFormContext } from "react-hook-form";
 
 export function MultiplesSections() {
-    const [sectionToAdd, setSectionToAdd] = useState<MultipleDrapItemData | null>(null);
+    const { getValues } = useFormContext();
 
+    const [sectionToAdd, setSectionToAdd] = useState<MultipleDrapItemData | null>(null);
+    const [initialData, setInitialData] = useState<MultipleDrapItemData | null>(null);
 
     const sectionsKeys: MultipleDrapItemData[] = [
         {
@@ -61,6 +64,14 @@ export function MultiplesSections() {
         },
     ];
 
+    const onEdit = (section: MultipleDrapItemData, index: number) => {
+        const currenteValues = getValues();
+        const currentItems = currenteValues.content[section.formKey];
+
+        setSectionToAdd(section);
+        setInitialData(currentItems[index]);
+    };
+
     return (
         <div>
             {
@@ -73,7 +84,7 @@ export function MultiplesSections() {
                         <MultipleDragList
                             data={section}
                             onAdd={() => setSectionToAdd(section)}
-                            onEdit={() => { }}
+                            onEdit={(index) => { onEdit(section, index) }}
                         />
                     </Fragment>
                 ))
@@ -82,10 +93,14 @@ export function MultiplesSections() {
             {
                 sectionToAdd && (
                     <ManageMultipleItemDialog
+                        initialData={initialData}
                         data={sectionToAdd}
                         open={!!sectionToAdd}
                         setOpen={(value) => {
-                            if (!value) setSectionToAdd(null);
+                            if (!value) {
+                                setSectionToAdd(null);
+                                setInitialData(null);
+                            };
                         }}
                     />
                 )
