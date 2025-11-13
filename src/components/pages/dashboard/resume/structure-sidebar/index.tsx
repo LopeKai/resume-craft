@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { TemplatesListSection } from "./sections/templates-list";
+import { LayoutSection } from "./sections/layout";
 
 export function StructureSidebar() {
     return(
@@ -7,6 +8,8 @@ export function StructureSidebar() {
             <TemplatesListSection />
 
             <Separator className="my-5"/>
+
+            <LayoutSection />
         </aside>
     )
 }
