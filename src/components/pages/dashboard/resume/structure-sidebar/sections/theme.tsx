@@ -5,6 +5,8 @@ import colors from "tailwindcss/colors";
 import { Controller, useForm, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useEditor } from "@tiptap/react";
+import { useCallback, useEffect } from "react";
 
 const keysToIgnore = [
     "current",
@@ -18,7 +20,24 @@ const keysToIgnore = [
 const colorKeys = Object.keys(colors).filter((key) => !keysToIgnore.includes(key)) as (keyof typeof colors)[];
 
 export function ThemeSection() {
-    const { control } = useFormContext<ResumeData>();
+    const { control, watch } = useFormContext<ResumeData>();
+
+    const currentColorTheme = watch("structure.colorTheme");
+
+    const handleSetCssVariable = useCallback(() => {
+        if (!currentColorTheme) return;
+
+        const colorKey = currentColorTheme as keyof typeof colors;
+
+        document.documentElement.style.setProperty(
+            "--resume-primary",
+            colors[colorKey][500]
+        );
+    }, [currentColorTheme]);
+
+    useEffect(() => {
+        handleSetCssVariable()
+    }, [handleSetCssVariable]);
 
     return (
         <div>
