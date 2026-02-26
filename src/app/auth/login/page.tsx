@@ -14,6 +14,8 @@ export default function LoginPage() {
 
         const provider = form.get("provider") as Providers
 
+        console.log(provider)
+
         await signIn(provider, {redirectTo: "/dashboard/resumes"});
     };
 
